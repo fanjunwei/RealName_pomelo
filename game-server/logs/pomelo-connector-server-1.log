@@ -1,6 +1,0 @@
-[2015-01-15 16:09:31.199] [INFO] pomelo - [32m[/Users/fanjunwei003/WebstormProjects/RealName/game-server/node_modules/pomelo/lib/application.js] [39mapplication inited: "connector-server-1"
-[2015-01-15 16:09:31.590] [INFO] pomelo - [32m[/Users/fanjunwei003/WebstormProjects/RealName/game-server/node_modules/pomelo/lib/application.js] [39m"connector-server-1" enter after start...
-[2015-01-15 16:09:31.592] [INFO] pomelo - [32m[/Users/fanjunwei003/WebstormProjects/RealName/game-server/node_modules/pomelo/lib/application.js] [39m"connector-server-1" finish start
-[2015-01-15 16:09:31.592] [INFO] pomelo - [32m[/Users/fanjunwei003/WebstormProjects/RealName/game-server/node_modules/pomelo/lib/application.js] [39m"connector-server-1" startup in 342 ms
-[2015-01-15 16:09:39.405] [DEBUG] pomelo - [36m[/Users/fanjunwei003/WebstormProjects/RealName/game-server/node_modules/pomelo/lib/components/connector.js] [39m[connector-server-1] getSession session is created with session id: 1
-[2015-01-15 18:20:24.797] [DEBUG] pomelo - [36m[/Users/fanjunwei003/WebstormProjects/RealName/game-server/node_modules/pomelo/lib/common/service/sessionService.js] [39msession on [connector-server-1] is closed with session id: 1
