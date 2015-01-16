@@ -73,6 +73,29 @@ ChatRemote.prototype.get = function (name, flag) {
     return users;
 };
 
+ChatRemote.prototype.push = function (rote, uid, message,cb) {
+    var channelService = this.app.get('channelService');
+    var channel = channelService.getChannel("chat", false);
+    console.log('message',message);
+    if (!!channel) {
+        if (uid == 'all') {
+            channel.pushMessage(rote, message);
+        }
+        else {
+            var tuid = uid;
+            var member = channel.getMember(tuid);
+            if (member) {
+                var tsid = member['sid'];
+                channelService.pushMessageByUids(rote, message, [{
+                    uid: tuid,
+                    sid: tsid
+                }]);
+            }
+
+        }
+    }
+};
+
 /**
  * Kick user out chat channel.
  *

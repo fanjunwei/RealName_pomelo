@@ -25,6 +25,7 @@ app.configure('production|development', 'gate', function () {
         {
             connector: pomelo.connectors.hybridconnector
         });
+    app.load(httpapi, {port: app.get('http_api_port')});
 });
 
 // app configure
@@ -37,7 +38,7 @@ app.configure('production|development', function () {
 });
 app.configure('production|development', 'master', function () {
     httpHelper.get(app.get('django_url_base') + '/wadmin/clean_online/');//服务器开启时,清除在线记录
-    app.load(httpapi, {port: app.get('http_api_port')});
+
 });
 // start app
 app.start();

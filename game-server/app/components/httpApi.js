@@ -1,10 +1,14 @@
 // components/HttpApi.js
+
+var express = require('express');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var PORT = 3001;
+
 module.exports = function (app, opts) {
     return new HttpApi(app, opts);
 };
-var express = require('express');
 
-var PORT = 3001;
 var HttpApi = function (app, opts) {
     this.app = app;
     this.port = opts.port | PORT;
@@ -15,12 +19,20 @@ HttpApi.name = '__HttpApi__';
 HttpApi.prototype.start = function (cb) {
     console.log('HttpApi Start');
     var self = this;
-    var httpServer = express.createServer();
-    httpServer.use(express.bodyParser());
+    var httpServer = express();
+    httpServer.use(bodyParser.json());
+    httpServer.use(bodyParser.urlencoded({extended: false}));
+    httpServer.use(cookieParser());
+
 
     // url路由
-    httpServer.post('/push/:route', function (req, res) {
+    httpServer.post('/push/:route/:uid', function (req, res) {
+        var route = req.params.route;
+        var uid = req.params.uid;
+        var message = req.body;
 
+        self.app.rpc.chat.chatRemote.push("chat", route, uid, message, null);
+        res.send('ok');
     });
 
     httpServer.listen(this.port);
