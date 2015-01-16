@@ -1,9 +1,9 @@
-module.exports = function(app) {
-	return new Handler(app);
+module.exports = function (app) {
+    return new Handler(app);
 };
 
-var Handler = function(app) {
-		this.app = app;
+var Handler = function (app) {
+    this.app = app;
 };
 
 var handler = Handler.prototype;
@@ -16,29 +16,26 @@ var handler = Handler.prototype;
  * @param  {Function} next    next stemp callback
  * @return {Void}
  */
-handler.enter = function(msg, session, next) {
-	var self = this;
-	var uid = msg.uid;
-	var sessionService = self.app.get('sessionService');
+handler.enter = function (msg, session, next) {
+    var self = this;
+    var uid = msg.uid;
+    var sessionService = self.app.get('sessionService');
 
-	//duplicate log in
-	if( !! sessionService.getByUid(uid)) {
-		next(null, {
-			code: 500,
-			error: true
-		});
-		return;
-	}
+    //duplicate log in
 
-	session.bind(uid);
-	session.on('closed', onUserLeave.bind(null, self.app));
+    if (sessionService.getByUid(uid)) {
+        sessionService.kick(uid,'kick');
+    }
 
-	//put user into channel
-	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), true, function(users){
-		next(null, {
-			users:users
-		});
-	});
+    session.bind(uid);
+    session.on('closed', onUserLeave.bind(null, self.app));
+
+    //put user into channel
+    self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), true, function (users) {
+        next(null, {
+            users: users
+        });
+    });
 };
 
 /**
@@ -48,9 +45,12 @@ handler.enter = function(msg, session, next) {
  * @param {Object} session current session object
  *
  */
-var onUserLeave = function(app, session) {
-	if(!session || !session.uid) {
-		return;
-	}
-	app.rpc.chat.chatRemote.kick(session, session.uid, app.get('serverId'), session.get('rid'), null);
+var onUserLeave = function (app, session,resspon) {
+    console.log(resspon);
+    if (!session || !session.uid) {
+        return;
+    }
+    if (resspon!=='kick') {
+        app.rpc.chat.chatRemote.kick(session, session.uid, app.get('serverId'), null);
+    }
 };

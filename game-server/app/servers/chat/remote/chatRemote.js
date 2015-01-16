@@ -36,7 +36,7 @@ ChatRemote.prototype.add = function (uid, sid, flag, cb) {
     var httpHelper = this.app.get('httpHelper');
     httpHelper.get(this.app.get('django_url_base') + '/wadmin/online_change/?' + require('querystring').stringify(parm), function (err, data) {
         if (!err) {
-            console.log(data);
+            console.log('online:%s' + data);
             data = JSON.parse(data);
             cb(data);
         }
@@ -87,11 +87,26 @@ ChatRemote.prototype.kick = function (uid, sid, name, cb) {
     if (!!channel) {
         channel.leave(uid, sid);
     }
-    var username = uid;
-    var param = {
-        route: 'onLeave',
-        user: username
+    var parm = {
+        uid: uid,
+        state: '0'
     };
-    //channel.pushMessage(param);
-    cb();
+    var httpHelper = this.app.get('httpHelper');
+    httpHelper.get(this.app.get('django_url_base') + '/wadmin/online_change/?' + require('querystring').stringify(parm), function (err, data) {
+        if (!err) {
+            console.log('offline:%s' + data);
+            data = JSON.parse(data);
+            if (cb)
+                cb(data);
+        }
+        else {
+            res = {
+                success: false,
+                msg: data
+            };
+            console.log("Got error: " + data);
+            if (cb)
+                cb(res);
+        }
+    });
 };
