@@ -24,7 +24,7 @@ handler.enter = function (msg, session, next) {
 
     //duplicate log in
     if (!!sessionService.getByUid(uid)) {
-        channelService.pushMessageByUids('kick','你的账号已经在别处登录。如果不是本人的操作，请重新登录，修改密码。',[{uid:uid,sid:self.app.get("serverId")}]);
+        channelService.pushMessageByUids('kick','您的账号已经在别处登录。如不是本人的操作，请及时修改密码。',[{uid:uid,sid:self.app.get("serverId")}]);
         sessionService.kick(uid, 'kick');
     }
 
