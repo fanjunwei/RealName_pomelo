@@ -29,8 +29,8 @@ HttpApi.prototype.start = function (cb) {
     httpServer.post('/push/:route/:uid', function (req, res) {
         var route = req.params.route;
         var uid = req.params.uid;
-        var message = req.body;
-
+        var message = req.body.message;
+        console.log('http server message',message);
         self.app.rpc.chat.chatRemote.push("chat", route, uid, message, null);
         res.send('ok');
     });

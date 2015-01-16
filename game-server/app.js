@@ -26,6 +26,7 @@ app.configure('production|development', 'gate', function () {
             connector: pomelo.connectors.hybridconnector
         });
     app.load(httpapi, {port: app.get('http_api_port')});
+
 });
 
 // app configure

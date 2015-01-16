@@ -73,10 +73,10 @@ ChatRemote.prototype.get = function (name, flag) {
     return users;
 };
 
-ChatRemote.prototype.push = function (rote, uid, message,cb) {
+ChatRemote.prototype.push = function (rote, uid, message, cb) {
     var channelService = this.app.get('channelService');
     var channel = channelService.getChannel("chat", false);
-    console.log('message',message);
+    console.log('message', message);
     if (!!channel) {
         if (uid == 'all') {
             channel.pushMessage(rote, message);
@@ -94,6 +94,8 @@ ChatRemote.prototype.push = function (rote, uid, message,cb) {
 
         }
     }
+    if (cb)
+        cb();
 };
 
 /**
