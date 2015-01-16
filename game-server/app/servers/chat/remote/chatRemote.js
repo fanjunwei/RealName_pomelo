@@ -1,4 +1,3 @@
-var http = require("http");
 module.exports = function (app) {
     return new ChatRemote(app);
 };
@@ -34,27 +33,21 @@ ChatRemote.prototype.add = function (uid, sid, flag, cb) {
         uid: uid,
         state: '1'
     };
-
-    http.get(this.app.get('django_url_base') + '/wadmin/online_change/?' + require('querystring').stringify(parm), function (res) {
-        var size = 0;
-        var chunks = [];
-        res.on('data', function (chunk) {
-            size += chunk.length;
-            chunks.push(chunk);
-        });
-        res.on('end', function () {
-            var data = Buffer.concat(chunks, size).toString();
+    var httpHelper = this.app.get('httpHelper');
+    httpHelper.get(this.app.get('django_url_base') + '/wadmin/online_change/?' + require('querystring').stringify(parm), function (err, data) {
+        if (!err) {
             console.log(data);
-            data=JSON.parse(data);
+            data = JSON.parse(data);
             cb(data);
-        });
-    }).on('error', function (e) {
-        res = {
-            success: false,
-            msg: e.message
-        };
-        console.log("Got error: " + e.message);
-        cb(res);
+        }
+        else {
+            res = {
+                success: false,
+                msg: data
+            };
+            console.log("Got error: " + data);
+            cb(res);
+        }
     });
 
 };
