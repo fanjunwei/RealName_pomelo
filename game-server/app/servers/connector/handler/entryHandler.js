@@ -20,15 +20,16 @@ handler.enter = function (msg, session, next) {
     var self = this;
     var uid = msg.uid;
     var sessionService = self.app.get('sessionService');
+    var channelService = self.app.get('channelService');
 
     //duplicate log in
-
-    if (sessionService.getByUid(uid)) {
-        sessionService.kick(uid,'kick');
+    if (!!sessionService.getByUid(uid)) {
+        channelService.pushMessageByUids('kick','你的账号已经在别处登录。如果不是本人的操作，请重新登录，修改密码。',[{uid:uid,sid:self.app.get("serverId")}]);
+        sessionService.kick(uid, 'kick');
     }
 
     session.bind(uid);
-    session.on('closed', onUserLeave.bind(null, self.app));
+    session.on('closed', offline.bind(null, self.app));
 
     //put user into channel
     self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), true, function (users) {
@@ -45,12 +46,12 @@ handler.enter = function (msg, session, next) {
  * @param {Object} session current session object
  *
  */
-var onUserLeave = function (app, session,resspon) {
-    console.log(resspon);
+var offline = function (app, session, reason) {
+    console.log(reason);
     if (!session || !session.uid) {
         return;
     }
-    if (resspon!=='kick') {
-        app.rpc.chat.chatRemote.kick(session, session.uid, app.get('serverId'), null);
+    if (reason !== 'kick') {
+        app.rpc.chat.chatRemote.offline(session, session.uid, app.get('serverId'), null);
     }
 };

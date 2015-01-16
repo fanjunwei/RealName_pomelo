@@ -81,7 +81,8 @@ ChatRemote.prototype.get = function (name, flag) {
  * @param {String} name channel name
  *
  */
-ChatRemote.prototype.kick = function (uid, sid, name, cb) {
+ChatRemote.prototype.offline = function (uid, sid, cb) {
+    var name = 'chat';
     var channel = this.channelService.getChannel(name, false);
     // leave channel
     if (!!channel) {
