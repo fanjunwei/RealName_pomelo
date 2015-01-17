@@ -30,7 +30,7 @@ HttpApi.prototype.start = function (cb) {
         var route = req.params.route;
         var uid = req.params.uid;
         var message = req.body.message;
-        console.log('http server message',message);
+        console.log('http server message', message);
         self.app.rpc.chat.chatRemote.push("chat", route, uid, message, null);
         res.send('ok');
     });
@@ -45,5 +45,7 @@ HttpApi.prototype.afterStart = function (cb) {
 };
 
 HttpApi.prototype.stop = function (force, cb) {
+    var httpHelper = this.app.get('httpHelper');
+    httpHelper.get(app.get('django_url_base') + '/wadmin/clean_online/');//服务器关闭时,清除在线记录
     process.nextTick(cb);
 };

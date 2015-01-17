@@ -38,7 +38,6 @@ ChatRemote.prototype.add = function (uid, sid, flag, cb) {
         if (!err) {
             console.log('online:%s' + data);
             data = JSON.parse(data);
-            cb(data);
         }
         else {
             res = {
@@ -46,32 +45,12 @@ ChatRemote.prototype.add = function (uid, sid, flag, cb) {
                 msg: data
             };
             console.log("Got error: " + data);
-            cb(res);
         }
     });
-
+    if (cb)
+        cb();
 };
 
-/**
- * Get user from chat channel.
- *
- * @param {Object} opts parameters for request
- * @param {String} name channel name
- * @param {boolean} flag channel parameter
- * @return {Array} users uids in channel
- *
- */
-ChatRemote.prototype.get = function (name, flag) {
-    var users = [];
-    var channel = this.channelService.getChannel(name, flag);
-    if (!!channel) {
-        users = channel.getMembers();
-    }
-    for (var i = 0; i < users.length; i++) {
-        users[i] = users[i].split('*')[0];
-    }
-    return users;
-};
 
 ChatRemote.prototype.push = function (rote, uid, message, cb) {
     var channelService = this.app.get('channelService');
@@ -122,8 +101,6 @@ ChatRemote.prototype.offline = function (uid, sid, cb) {
         if (!err) {
             console.log('offline:%s' + data);
             data = JSON.parse(data);
-            if (cb)
-                cb(data);
         }
         else {
             res = {
@@ -131,8 +108,9 @@ ChatRemote.prototype.offline = function (uid, sid, cb) {
                 msg: data
             };
             console.log("Got error: " + data);
-            if (cb)
-                cb(res);
+
         }
     });
+    if (cb)
+        cb();
 };
